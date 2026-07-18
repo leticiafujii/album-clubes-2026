@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Álbum Oficial · Clubes de Ciencia UFMG 2026</title>
+<meta name="description" content="Álbum de fotos oficial do Clubes de Ciencia UFMG 2026. Reviva os melhores momentos e baixe suas fotos favoritas." />
+
+<!-- Fontes da identidade visual: Montserrat (títulos) + Open Sans (corpo) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<!-- React + Babel (permite escrever React sem instalar nada) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+
+<style>
+/* ============================================================
+   IDENTIDADE VISUAL — CLUBES DE CIENCIA UFMG 2026
+   Paleta oficial (manual de identidade):
+   laranja #F35828 · laranja claro #F19437 · amarelo #EFD046
+   dourado #E7AE56 · petróleo #1B5473 · verde-água #19A79A
+   azul claro #7FCAD9 · azul acinzentado #407688 · marinho #002137
+   ============================================================ */
+:root{
+  --laranja:#F35828;
+  --laranja2:#F19437;
+  --amarelo:#EFD046;
+  --dourado:#E7AE56;
+  --petroleo:#1B5473;
+  --verde:#19A79A;
+  --azulclaro:#7FCAD9;
+  --azulcinza:#407688;
+  --marinho:#002137;
+  --creme:#FBF8F0;
+  --branco:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Open Sans',system-ui,sans-serif;
+  background:var(--creme);
+  color:var(--marinho);
+  line-height:1.55;
+}
+h1,h2,h3,.font-titulo{font-family:'Montserrat',sans-serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+img{display:block;max-width:100%}
+a{color:inherit}
+
+/* ---------- Cabeçalho ---------- */
+.header{
+  background:var(--petroleo);
+  color:var(--branco);
+  padding:28px 20px 24px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.header::after{ /* barrinha amarela, eco da barra vermelha da UFMG */
+  content:"";
+  display:block;
+  width:72px;height:6px;border-radius:3px;
+  background:var(--amarelo);
+  margin:14px auto 0;
+}
+.header .mascote{width:64px;height:64px;margin:0 auto 10px}
+.header .eyebrow{
+  font-family:'Montserrat',sans-serif;
+  font-weight:700;font-size:.72rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--azulclaro);
+}
+.header h1{
+  font-weight:800;font-size:clamp(1.5rem,5.5vw,2.4rem);
+  line-height:1.15;margin-top:6px;
+}
+.header h1 .destaque{color:var(--amarelo)}
+.header p{
+  max-width:520px;margin:10px auto 0;
+  font-size:.95rem;color:#D7E7F0;
+}
+
+/* ---------- Filtros ---------- */
+.filtros{
+  position:sticky;top:0;z-index:20;
+  background:rgba(251,248,240,.94);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid #E8E2D2;
+  padding:12px 0 10px;
+}
+.filtro-grupo{max-width:1100px;margin:0 auto;padding:0 16px}
+.filtro-label{
+  font-family:'Montserrat',sans-serif;font-weight:700;
+  font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--azulcinza);margin:4px 0 6px;
+}
+.chips{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;
+  padding:8px 16px;border-radius:999px;
+  font-size:.85rem;font-weight:600;
+  background:var(--branco);color:var(--petroleo);
+  border:1.5px solid #DCE6EA;
+  transition:all .15s ease;
+  white-space:nowrap;
+}
+.chip:active{transform:scale(.96)}
+.chip.ativo-dia{background:var(--petroleo);border-color:var(--petroleo);color:var(--branco)}
+.chip.ativo-cat{background:var(--verde);border-color:var(--verde);color:var(--branco)}
+
+/* ---------- Galeria ---------- */
+.galeria-wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+.contagem{font-size:.85rem;color:var(--azulcinza);margin-bottom:14px}
+.grade{
+  display:grid;gap:10px;
+  grid-template-columns:repeat(2,1fr);
+}
+@media(min-width:640px){.grade{grid-template-columns:repeat(3,1fr);gap:14px}}
+@media(min-width:1024px){.grade{grid-template-columns:repeat(4,1fr)}}
+.foto{
+  position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;
+  background:#E9E2D2;padding:0;width:100%;
+  box-shadow:0 1px 3px rgba(0,33,55,.08);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.foto img{width:100%;height:100%;object-fit:cover}
+@media(hover:hover){
+  .foto:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,33,55,.18)}
+}
+.foto:focus-visible{outline:3px solid var(--laranja);outline-offset:2px}
+.skeleton{
+  aspect-ratio:1/1;border-radius:14px;
+  background:linear-gradient(100deg,#EDE7D8 40%,#F6F1E4 50%,#EDE7D8 60%);
+  background-size:200% 100%;
+  animation:brilho 1.4s infinite;
+}
+@keyframes brilho{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){
+  .skeleton{animation:none}
+  .foto,.chip{transition:none}
+}
+
+/* ---------- Estado vazio ---------- */
+.vazio{
+  text-align:center;padding:56px 20px;color:var(--azulcinza);
+}
+.vazio .mascote{width:96px;height:96px;margin:0 auto 14px;opacity:.9}
+.vazio h3{color:var(--petroleo);font-weight:700;margin-bottom:6px}
+.vazio p{font-size:.9rem;max-width:360px;margin:0 auto}
+
+/* ---------- Lightbox ---------- */
+.lightbox{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(0,33,55,.92);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px;
+}
+.lightbox img{
+  max-width:100%;max-height:72vh;border-radius:12px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+.lightbox-acoes{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:.9rem;
+  padding:13px 24px;border-radius:999px;
+  transition:transform .12s ease,filter .12s ease;
+  text-decoration:none;
+}
+.btn:active{transform:scale(.97)}
+.btn-laranja{background:var(--laranja);color:#fff}
+.btn-laranja:hover{filter:brightness(1.08)}
+.btn-fantasma{background:transparent;color:#CFE3EE;border:1.5px solid #40708F}
+.btn-fantasma:hover{background:rgba(255,255,255,.08)}
+.lightbox-fechar{
+  position:absolute;top:14px;right:14px;
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,.12);color:#fff;font-size:1.3rem;line-height:1;
+}
+.lightbox-fechar:hover{background:rgba(255,255,255,.22)}
+
+/* ---------- Rodapé ---------- */
+.rodape{
+  background:var(--marinho);color:#9FBBCB;
+  text-align:center;padding:26px 20px;font-size:.8rem;
+}
+.rodape a{color:#CFE3EE;text-decoration:underline;text-underline-offset:3px}
+.rodape .link-equipe{opacity:.75}
+
+/* ---------- Área da equipe (upload) ---------- */
+.admin-wrap{max-width:640px;margin:0 auto;padding:28px 16px 70px}
+.cartao{
+  background:var(--branco);border-radius:18px;
+  padding:24px 20px;box-shadow:0 2px 10px rgba(0,33,55,.08);
+}
+.cartao h2{color:var(--petroleo);font-weight:800;font-size:1.3rem;margin-bottom:4px}
+.cartao .sub{font-size:.88rem;color:var(--azulcinza);margin-bottom:18px}
+.campo{margin-bottom:16px}
+.campo label{
+  display:block;font-family:'Montserrat',sans-serif;font-weight:700;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--azulcinza);margin-bottom:8px;
+}
+.campo input[type=password]{
+  width:100%;padding:13px 14px;border-radius:12px;
+  border:1.5px solid #DCE6EA;font-size:1rem;font-family:inherit;
+}
+.campo input[type=password]:focus{outline:2px solid var(--verde);border-color:var(--verde)}
+.erro{color:var(--laranja);font-size:.85rem;margin-top:8px;font-weight:600}
+.btn-cheio{width:100%;justify-content:center}
+.btn-verde{background:var(--verde);color:#fff}
+.btn-verde:hover{filter:brightness(1.07)}
+.btn-verde:disabled{opacity:.45;cursor:not-allowed;filter:none}
+
+.dropzone{
+  border:2.5px dashed var(--azulclaro);border-radius:16px;
+  background:#F2F8FB;
+  padding:34px 16px;text-align:center;color:var(--azulcinza);
+  transition:all .15s ease;
+}
+.dropzone.ativo{border-color:var(--laranja);background:#FFF4EC}
+.dropzone .mascote{width:56px;height:56px;margin:0 auto 8px}
+.dropzone strong{color:var(--petroleo)}
+.dropzone p{font-size:.85rem;margin-top:4px}
+
+.fila{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.item-fila{
+  display:flex;align-items:center;gap:12px;
+  background:#F7F9FA;border-radius:12px;padding:8px 12px 8px 8px;
+}
+.item-fila img{width:52px;height:52px;object-fit:cover;border-radius:8px}
+.item-fila .nome{flex:1;font-size:.82rem;word-break:break-all;color:var(--marinho)}
+.barra{height:6px;border-radius:3px;background:#E1E9ED;margin-top:5px;overflow:hidden}
+.barra > div{height:100%;background:var(--verde);border-radius:3px;transition:width .2s ease}
+.status-ok{color:var(--verde);font-weight:700;font-size:1.05rem}
+.status-erro{color:var(--laranja);font-weight:700;font-size:.75rem}
+.remover{color:#A9B9C2;font-size:1.1rem;padding:4px 8px}
+.remover:hover{color:var(--laranja)}
+
+.aviso-sucesso{
+  background:#E5F5F3;border:1.5px solid var(--verde);color:#0E7268;
+  border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:14px;font-weight:600;
+}
+.voltar{
+  display:inline-block;margin-bottom:14px;font-size:.85rem;font-weight:600;
+  color:var(--azulcinza);text-decoration:none;
+}
+.voltar:hover{color:var(--petroleo)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+/* ================================================================
+   ⚙️ CONFIGURAÇÃO — os únicos valores que você talvez precise mudar
+   ================================================================ */
+const CLOUD_NAME  = "jnhrn5yg";     // seu Cloud name do Cloudinary
+const PRESET      = "clubes2026";   // upload preset (Unsigned)
+const SENHA_EQUIPE= "cdecmkt2026";      // senha da área da equipe
+const TAG_GLOBAL  = "clubes2026";   // tag aplicada a TODAS as fotos
+
+// Dias do evento (valor = tag no Cloudinary, nome = o que aparece no site)
+const DIAS = [
+  { valor:"dia-1", nome:"Dia 1" },
+  { valor:"dia-2", nome:"Dia 2" },
+  { valor:"dia-3", nome:"Dia 3" },
+  { valor:"dia-4", nome:"Dia 4" },
+  { valor:"dia-5", nome:"Dia 5" },
+];
+
+// Momentos do evento
+const CATEGORIAS = [
+  { valor:"palestras",             nome:"Palestras" },
+  { valor:"clubes",                nome:"Clubes" },
+  { valor:"tour-ufmg",             nome:"Tour pela UFMG" },
+  { valor:"feira-de-ciencias",     nome:"Feira de Ciencias" },
+  { valor:"premiacao-encerramento",nome:"Premiação e Encerramento" },
+  { valor:"bastidores",            nome:"Bastidores" },
+];
+/* ================================================================ */
+
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ---------- Mascote: capivara cientista (SVG) ---------- */
+function Capivara({className}){
+  return (
+    <svg className={className||"mascote"} viewBox="0 0 120 120" aria-hidden="true">
+      <ellipse cx="60" cy="70" rx="42" ry="38" fill="#A9744F"/>
+      <ellipse cx="60" cy="86" rx="26" ry="18" fill="#8C5E3C"/>
+      <ellipse cx="30" cy="38" rx="9" ry="11" fill="#8C5E3C"/>
+      <ellipse cx="90" cy="38" rx="9" ry="11" fill="#8C5E3C"/>
+      <rect x="18" y="44" width="84" height="8" rx="4" fill="#F35828"/>
+      <circle cx="42" cy="50" r="13" fill="#CDE9F2" stroke="#F35828" strokeWidth="5"/>
+      <circle cx="78" cy="50" r="13" fill="#CDE9F2" stroke="#F35828" strokeWidth="5"/>
+      <circle cx="42" cy="50" r="4" fill="#002137"/>
+      <circle cx="78" cy="50" r="4" fill="#002137"/>
+      <ellipse cx="52" cy="84" rx="3.5" ry="4.5" fill="#4A3222"/>
+      <ellipse cx="68" cy="84" rx="3.5" ry="4.5" fill="#4A3222"/>
+      <path d="M52 95 Q60 101 68 95" stroke="#4A3222" strokeWidth="3" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+/* ---------- Funções auxiliares (Cloudinary) ---------- */
+const urlMiniatura = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/c_fill,g_auto,w_500,h_500,q_auto,f_auto/${id}`;
+const urlGrande = (id) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_1600,q_auto,f_auto/${id}`;
+const urlDownload = (id, formato) =>
+  `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/fl_attachment/${id}.${formato||"jpg"}`;
+
+async function buscarPorTag(tag){
+  const r = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${tag}.json`);
+  if(!r.ok) return [];                 // 404 = nenhuma foto com essa tag ainda
+  const dados = await r.json();
+  return dados.resources || [];
+}
+
+/* ---------- Galeria pública ---------- */
+function Galeria(){
+  const [fotos, setFotos]       = useState(null);   // null = carregando
+  const [dia, setDia]           = useState("todos");
+  const [cat, setCat]           = useState("todas");
+  const [aberta, setAberta]     = useState(null);   // foto no lightbox
+
+  useEffect(() => {
+    let ativo = true;
+    setFotos(null);
+    (async () => {
+      try{
+        let lista;
+        if(dia === "todos" && cat === "todas"){
+          lista = await buscarPorTag(TAG_GLOBAL);
+        } else if(dia !== "todos" && cat !== "todas"){
+          // Interseção: fotos que têm as duas tags
+          const [a, b] = await Promise.all([buscarPorTag(dia), buscarPorTag(cat)]);
+          const ids = new Set(b.map(f => f.public_id));
+          lista = a.filter(f => ids.has(f.public_id));
+        } else {
+          lista = await buscarPorTag(dia !== "todos" ? dia : cat);
+        }
+        lista.sort((x,y) => new Date(y.created_at) - new Date(x.created_at));
+        if(ativo) setFotos(lista);
+      }catch(e){
+        if(ativo) setFotos([]);
+      }
+    })();
+    return () => { ativo = false; };
+  }, [dia, cat]);
+
+  // Fechar lightbox com tecla ESC
+  useEffect(() => {
+    const fn = (e) => { if(e.key === "Escape") setAberta(null); };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, []);
+
+  return (
+    <div>
+      <header className="header">
+        <Capivara className="mascote"/>
+        <div className="eyebrow">Clubes de Ciencia UFMG · 2026</div>
+        <h1>Álbum <span className="destaque">Oficial</span> do Evento</h1>
+        <p>Reviva os melhores momentos, encontre suas fotos e baixe em alta qualidade. É só filtrar por dia ou momento. 🔬</p>
+      </header>
+
+      <nav className="filtros" aria-label="Filtros de fotos">
+        <div className="filtro-grupo">
+          <div className="filtro-label">Dia do evento</div>
+          <div className="chips">
+            <button className={"chip"+(dia==="todos"?" ativo-dia":"")} onClick={()=>setDia("todos")}>Todos os dias</button>
+            {DIAS.map(d => (
+              <button key={d.valor} className={"chip"+(dia===d.valor?" ativo-dia":"")} onClick={()=>setDia(d.valor)}>{d.nome}</button>
+            ))}
+          </div>
+          <div className="filtro-label">Momento</div>
+          <div className="chips">
+            <button className={"chip"+(cat==="todas"?" ativo-cat":"")} onClick={()=>setCat("todas")}>Todos</button>
+            {CATEGORIAS.map(c => (
+              <button key={c.valor} className={"chip"+(cat===c.valor?" ativo-cat":"")} onClick={()=>setCat(c.valor)}>{c.nome}</button>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      <main className="galeria-wrap">
+        {fotos === null && (
+          <div className="grade">
+            {Array.from({length:8}).map((_,i)=><div key={i} className="skeleton"/>)}
+          </div>
+        )}
+
+        {fotos && fotos.length === 0 && (
+          <div className="vazio">
+            <Capivara className="mascote"/>
+            <h3>Nenhuma foto por aqui ainda</h3>
+            <p>A capivara ainda está revelando as fotos deste filtro. Tente outro dia ou momento — ou volte em breve!</p>
+          </div>
+        )}
+
+        {fotos && fotos.length > 0 && (
+          <React.Fragment>
+            <div className="contagem">{fotos.length} {fotos.length===1?"foto":"fotos"}</div>
+            <div className="grade">
+              {fotos.map(f => (
+                <button key={f.public_id} className="foto" onClick={()=>setAberta(f)} aria-label="Ampliar foto">
+                  <img src={urlMiniatura(f.public_id)} alt="Foto do Clubes de Ciencia UFMG 2026" loading="lazy"/>
+                </button>
+              ))}
+            </div>
+          </React.Fragment>
+        )}
+      </main>
+
+      {aberta && (
+        <div className="lightbox" onClick={(e)=>{ if(e.target===e.currentTarget) setAberta(null); }}>
+          <button className="lightbox-fechar" onClick={()=>setAberta(null)} aria-label="Fechar">✕</button>
+          <img src={urlGrande(aberta.public_id)} alt="Foto ampliada"/>
+          <div className="lightbox-acoes">
+            <a className="btn btn-laranja" href={urlDownload(aberta.public_id, aberta.format)}>
+              ⬇ Baixar foto
+            </a>
+            <button className="btn btn-fantasma" onClick={()=>setAberta(null)}>Voltar à galeria</button>
+          </div>
+        </div>
+      )}
+
+      <footer className="rodape">
+        <p>Clubes de Ciencia UFMG · 2026 — feito com 💛 pela equipe de comunicação.</p>
+        <p style={{marginTop:6}}><a className="link-equipe" href="#equipe">Área da equipe</a></p>
+      </footer>
+    </div>
+  );
+}
+
+/* ---------- Área da equipe: senha + upload ---------- */
+function AreaEquipe(){
+  const [logada, setLogada] = useState(false);
+  const [senha, setSenha]   = useState("");
+  const [erro, setErro]     = useState("");
+
+  const entrar = () => {
+    if(senha === SENHA_EQUIPE){ setLogada(true); setErro(""); }
+    else setErro("Senha incorreta. Confira com a coordenação. 😉");
+  };
+
+  return (
+    <div className="admin-wrap">
+      <a className="voltar" href="#">← Voltar para a galeria</a>
+      {!logada ? (
+        <div className="cartao">
+          <h2>Área da equipe 🔑</h2>
+          <p className="sub">Espaço restrito para envio de fotos (marketing e comunicação).</p>
+          <div className="campo">
+            <label htmlFor="senha">Senha da equipe</label>
+            <input id="senha" type="password" value={senha}
+              onChange={e=>setSenha(e.target.value)}
+              onKeyDown={e=>{ if(e.key==="Enter") entrar(); }}
+              placeholder="Digite a senha combinada"/>
+          </div>
+          {erro && <div className="erro">{erro}</div>}
+          <button className="btn btn-verde btn-cheio" style={{marginTop:10}} onClick={entrar}>Entrar</button>
+        </div>
+      ) : (
+        <PainelUpload/>
+      )}
+    </div>
+  );
+}
+
+function PainelUpload(){
+  const [dia, setDia]         = useState(DIAS[0].valor);
+  const [cats, setCats]       = useState([]);
+  const [fila, setFila]       = useState([]);   // {id, file, preview, status, progresso}
+  const [enviando, setEnviando] = useState(false);
+  const [concluidas, setConcluidas] = useState(0);
+  const [arrastando, setArrastando] = useState(false);
+  const inputRef = useRef(null);
+  const proximoId = useRef(0);
+
+  const alternarCat = (v) =>
+    setCats(prev => prev.includes(v) ? prev.filter(x=>x!==v) : [...prev, v]);
+
+  const adicionarArquivos = useCallback((arquivos) => {
+    const imagens = Array.from(arquivos).filter(f => f.type.startsWith("image/"));
+    setFila(prev => [
+      ...prev,
+      ...imagens.map(f => ({
+        id: proximoId.current++,
+        file: f,
+        preview: URL.createObjectURL(f),
+        status: "pendente",   // pendente | enviando | ok | erro
+        progresso: 0,
+      }))
+    ]);
+  }, []);
+
+  const removerItem = (id) =>
+    setFila(prev => prev.filter(i => i.id !== id));
+
+  const enviarUm = (item, tags) => new Promise((resolve) => {
+    const dados = new FormData();
+    dados.append("file", item.file);
+    dados.append("upload_preset", PRESET);
+    dados.append("tags", tags.join(","));
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
+    xhr.upload.onprogress = (e) => {
+      if(e.lengthComputable){
+        const p = Math.round((e.loaded/e.total)*100);
+        setFila(prev => prev.map(i => i.id===item.id ? {...i, progresso:p} : i));
+      }
+    };
+    xhr.onload = () => {
+      const ok = xhr.status >= 200 && xhr.status < 300;
+      setFila(prev => prev.map(i => i.id===item.id ? {...i, status: ok?"ok":"erro", progresso:100} : i));
+      if(ok) setConcluidas(c => c+1);
+      resolve();
+    };
+    xhr.onerror = () => {
+      setFila(prev => prev.map(i => i.id===item.id ? {...i, status:"erro"} : i));
+      resolve();
+    };
+    setFila(prev => prev.map(i => i.id===item.id ? {...i, status:"enviando"} : i));
+    xhr.send(dados);
+  });
+
+  const enviarTudo = async () => {
+    setEnviando(true);
+    const tags = [TAG_GLOBAL, dia, ...cats];
+    const pendentes = fila.filter(i => i.status==="pendente" || i.status==="erro");
+    // Envia de 3 em 3 para não sobrecarregar a conexão
+    for(let i=0; i<pendentes.length; i+=3){
+      await Promise.all(pendentes.slice(i, i+3).map(item => enviarUm(item, tags)));
+    }
+    setEnviando(false);
+  };
+
+  const pendentesQtd = fila.filter(i=>i.status==="pendente"||i.status==="erro").length;
+
+  return (
+    <div className="cartao">
+      <h2>Enviar fotos 📸</h2>
+      <p className="sub">Escolha o dia e os momentos, arraste as fotos e clique em enviar. As tags são aplicadas a todas as fotos deste lote — para outro dia/momento, envie um novo lote.</p>
+
+      <div className="campo">
+        <label>Dia do evento (obrigatório)</label>
+        <div className="chips">
+          {DIAS.map(d => (
+            <button key={d.valor} className={"chip"+(dia===d.valor?" ativo-dia":"")} onClick={()=>setDia(d.valor)}>{d.nome}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="campo">
+        <label>Momentos (opcional, pode marcar vários)</label>
+        <div className="chips" style={{flexWrap:"wrap"}}>
+          {CATEGORIAS.map(c => (
+            <button key={c.valor} className={"chip"+(cats.includes(c.valor)?" ativo-cat":"")} onClick={()=>alternarCat(c.valor)}>{c.nome}</button>
+          ))}
+        </div>
+      </div>
+
+      <div
+        className={"dropzone"+(arrastando?" ativo":"")}
+        onDragOver={e=>{e.preventDefault(); setArrastando(true);}}
+        onDragLeave={()=>setArrastando(false)}
+        onDrop={e=>{e.preventDefault(); setArrastando(false); adicionarArquivos(e.dataTransfer.files);}}
+        onClick={()=>inputRef.current && inputRef.current.click()}
+        role="button" tabIndex={0}
+        onKeyDown={e=>{ if(e.key==="Enter") inputRef.current.click(); }}
+      >
+        <Capivara className="mascote"/>
+        <strong>Arraste as fotos aqui</strong>
+        <p>ou toque para escolher no seu aparelho</p>
+        <input ref={inputRef} type="file" accept="image/*" multiple hidden
+          onChange={e=>{ adicionarArquivos(e.target.files); e.target.value=""; }}/>
+      </div>
+
+      {fila.length > 0 && (
+        <div className="fila">
+          {fila.map(item => (
+            <div key={item.id} className="item-fila">
+              <img src={item.preview} alt=""/>
+              <div className="nome">
+                {item.file.name}
+                {(item.status==="enviando") && (
+                  <div className="barra"><div style={{width:item.progresso+"%"}}/></div>
+                )}
+                {item.status==="erro" && <div className="status-erro">Falhou — clique em enviar para tentar de novo</div>}
+              </div>
+              {item.status==="ok"
+                ? <span className="status-ok">✓</span>
+                : (!enviando && <button className="remover" onClick={()=>removerItem(item.id)} aria-label="Remover">✕</button>)}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button className="btn btn-verde btn-cheio" style={{marginTop:16}}
+        disabled={enviando || pendentesQtd===0} onClick={enviarTudo}>
+        {enviando ? "Enviando…" : `Enviar ${pendentesQtd>0?pendentesQtd:""} ${pendentesQtd===1?"foto":"fotos"}`}
+      </button>
+
+      {concluidas > 0 && !enviando && (
+        <div className="aviso-sucesso">
+          ✓ {concluidas} {concluidas===1?"foto enviada":"fotos enviadas"} com sucesso! Elas aparecem na galeria em até 1 minuto.
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Roteador simples: galeria ⇄ área da equipe ---------- */
+function App(){
+  const [rota, setRota] = useState(window.location.hash);
+  useEffect(() => {
+    const fn = () => setRota(window.location.hash);
+    window.addEventListener("hashchange", fn);
+    return () => window.removeEventListener("hashchange", fn);
+  }, []);
+  return rota === "#equipe" ? <AreaEquipe/> : <Galeria/>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
